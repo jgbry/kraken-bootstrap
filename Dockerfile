@@ -9,4 +9,5 @@ COPY --chown=appuser:appuser . .
 RUN chown appuser:appuser /app
 
 USER appuser
+ENV OUTPUT_DIR=output
 CMD ["python", "-m", "app.main"]
