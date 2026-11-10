@@ -8,10 +8,32 @@ on:
   pull_request:
 
 jobs:
-  # identifiant du job
-  hello:
+  lint-test:
     # runner hébergé par GitHub
     runs-on: ubuntu-latest
     steps:
-      - name: Afficher le SHA du commit
-        run: echo "${{ github.sha }}"
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Installer les dépendances
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Tests
+        run: pytest -q --junitxml=reports/junit.xml
+
+      - name: Publier le rapport de tests
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: junit-report
+          path: reports/junit.xml
