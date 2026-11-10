@@ -1,0 +1,17 @@
+# nom affiché dans l'onglet Actions
+name: ci
+
+# déclencheurs
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  # identifiant du job
+  hello:
+    # runner hébergé par GitHub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Afficher le SHA du commit
+        run: echo "${{ github.sha }}"
